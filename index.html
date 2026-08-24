@@ -1,1 +1,720 @@
 
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>경제 주요 이슈 & 자산 시세 대시보드</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#2563eb',
+              600: '#1d4ed8',
+              900: '#0f172a',
+            },
+            up: '#dc2626',   // 상승 (한국식 Red)
+            down: '#2563eb', // 하락 (한국식 Blue)
+            gold: '#d97706',
+          }
+        }
+      }
+    }
+  </script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.5);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen transition-colors duration-200 text-base">
+
+  <!-- Navigation / Header -->
+  <header class="border-b border-slate-200 bg-white sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="p-3 bg-blue-50 text-blue-600 rounded-xl border border-blue-200">
+          <i class="fa-solid fa-chart-line text-2xl sm:text-3xl"></i>
+        </div>
+        <div>
+          <h1 class="text-xl sm:text-3xl font-extrabold text-slate-900 leading-tight">글로벌 경제 & 자산 시세 대시보드</h1>
+          <p class="text-sm sm:text-base text-slate-500 mt-1">기준 영업일: <span class="text-blue-600 font-bold">2026년 8월 21일(금)</span> | 직전 영업일 종가 기준</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span class="w-2.5 h-2.5 mr-2 bg-emerald-500 rounded-full animate-pulse"></span>
+          레이아웃 정돈 완료
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 sm:space-y-10">
+
+    <!-- Top Key Issues Section -->
+    <section>
+      <div class="flex items-center justify-between mb-4 sm:mb-5">
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <i class="fa-solid fa-newspaper text-blue-600"></i>
+          어제자(영업일) 주요 경제 핵심 이슈
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Issue 1 -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 hover:shadow-lg hover:border-blue-300 transition-all flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="font-extrabold text-lg sm:text-xl text-slate-900 mb-2.5 leading-snug">미 국채 바이백에도 채권 가격 하락</h3>
+            <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+              미 재무부의 국채 매입(바이백) 조치에도 불구하고 지속적인 재정적자 우려와 신규 발행 물량 부담이 상존하면서 미국 국채 가격이 약세를 나타냈습니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- Issue 2 -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 hover:shadow-lg hover:border-blue-300 transition-all flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="font-extrabold text-lg sm:text-xl text-slate-900 mb-2.5 leading-snug">미국·유럽 PMI 호조 및 증시 반등</h3>
+            <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+              8월 제조업·서비스업 종합 PMI가 예상을 상회하며 연착륙(Soft Landing) 기대감이 유지, 뉴욕증시(S&P500·나스닥)가 주후반 저가 매수세로 반등했습니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- Issue 3 -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 hover:shadow-lg hover:border-blue-300 transition-all flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="font-extrabold text-lg sm:text-xl text-slate-900 mb-2.5 leading-snug">금 현물 $4,600/oz 신고가 돌파</h3>
+            <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+              미 달러화 강세에도 미 부채 상한 및 지정학적 불안감이 지속되며, 통화 헤지 및 안전자산 수요 확대로 금 가격이 사상 최고치를 경신했습니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- Issue 4 -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 hover:shadow-lg hover:border-blue-300 transition-all flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="font-extrabold text-lg sm:text-xl text-slate-900 mb-2.5 leading-snug">국고채 10년물 가격 하락세</h3>
+            <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+              미국 국채 가격 하락 연동, 원/달러 환율(1,389원선) 급등세 및 차주 한국은행 금통위의 기준금리 동결 경계감으로 국고채 10년물 가격이 약세를 보였습니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Unified Asset Cards & Interactive Period Chart Section -->
+    <section>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5 sm:mb-6">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+            <i class="fa-solid fa-chart-line text-blue-600"></i>
+            종목별 시세 · 확장된 기간별 차트 추이 · 통합 원인
+          </h2>
+          <p class="text-sm sm:text-base text-slate-500 mt-1">버튼 선택 시 3일부터 최대 10년까지의 세부 추이 그래프를 확인하실 수 있습니다.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+
+        <!-- 1. S&P 500 -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-5">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <span class="text-xs sm:text-sm font-bold text-slate-400 uppercase tracking-wider block">미국 대형주 지수</span>
+                <h3 class="text-xl font-black text-slate-900">S&P 500</h3>
+              </div>
+              <span class="text-xs sm:text-sm px-3 py-1 rounded-md font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                확인 완료
+              </span>
+            </div>
+
+            <div class="flex items-baseline justify-between mt-3">
+              <div class="text-3xl sm:text-4xl font-black text-slate-900">7,674.37</div>
+              <div class="text-right">
+                <span class="text-base sm:text-lg font-extrabold text-up flex items-center justify-end gap-1">
+                  <i class="fa-solid fa-caret-up"></i> +33.21 (+0.43%)
+                </span>
+                <span class="text-xs sm:text-sm text-slate-400 block mt-0.5">전전일: 7,641.16</span>
+              </div>
+            </div>
+
+            <!-- Interactive Chart Area -->
+            <div class="mt-5 pt-4 border-t border-slate-100">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                <span class="text-xs sm:text-sm font-bold text-slate-600">기간별 추이</span>
+                <div class="flex bg-slate-100 p-1 rounded-lg text-xs font-bold overflow-x-auto custom-scrollbar" id="btn-sp500">
+                  <button onclick="updateChart('sp500', '3d')" class="px-2 py-1 rounded bg-white text-blue-600 shadow-sm whitespace-nowrap shrink-0">3일</button>
+                  <button onclick="updateChart('sp500', '5d')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">5일</button>
+                  <button onclick="updateChart('sp500', '3m')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">3개월</button>
+                  <button onclick="updateChart('sp500', '6m')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">6개월</button>
+                  <button onclick="updateChart('sp500', '1y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">1년</button>
+                  <button onclick="updateChart('sp500', '3y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">3년</button>
+                  <button onclick="updateChart('sp500', '5y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">5년</button>
+                  <button onclick="updateChart('sp500', '10y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">10년</button>
+                </div>
+              </div>
+              <div class="h-40 w-full">
+                <canvas id="chart-sp500"></canvas>
+              </div>
+            </div>
+
+            <div class="mt-5 p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <strong class="text-slate-900 font-bold">[통합 사유]</strong> 미 국채 금리 상승 악재에도 불구하고 8월 제조업/서비스업 PMI 지표가 시장 예상을 상회하면서 경기 연착륙 확신이 강화되었으며, 주후반 대형주 중심의 저가 반발 매수세가 유입되어 상승 마감했습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. 나스닥 -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-5">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <span class="text-xs sm:text-sm font-bold text-slate-400 uppercase tracking-wider block">미국 기술주 지수</span>
+                <h3 class="text-xl font-black text-slate-900">나스닥 종합</h3>
+              </div>
+              <span class="text-xs sm:text-sm px-3 py-1 rounded-md font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                확인 완료
+              </span>
+            </div>
+
+            <div class="flex items-baseline justify-between mt-3">
+              <div class="text-3xl sm:text-4xl font-black text-slate-900">26,180.45</div>
+              <div class="text-right">
+                <span class="text-base sm:text-lg font-extrabold text-up flex items-center justify-end gap-1">
+                  <i class="fa-solid fa-caret-up"></i> +113.28 (+0.43%)
+                </span>
+                <span class="text-xs sm:text-sm text-slate-400 block mt-0.5">전전일: 26,067.17</span>
+              </div>
+            </div>
+
+            <!-- Interactive Chart Area -->
+            <div class="mt-5 pt-4 border-t border-slate-100">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                <span class="text-xs sm:text-sm font-bold text-slate-600">기간별 추이</span>
+                <div class="flex bg-slate-100 p-1 rounded-lg text-xs font-bold overflow-x-auto custom-scrollbar" id="btn-nasdaq">
+                  <button onclick="updateChart('nasdaq', '3d')" class="px-2 py-1 rounded bg-white text-blue-600 shadow-sm whitespace-nowrap shrink-0">3일</button>
+                  <button onclick="updateChart('nasdaq', '5d')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">5일</button>
+                  <button onclick="updateChart('nasdaq', '3m')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">3개월</button>
+                  <button onclick="updateChart('nasdaq', '6m')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">6개월</button>
+                  <button onclick="updateChart('nasdaq', '1y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">1년</button>
+                  <button onclick="updateChart('nasdaq', '3y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">3년</button>
+                  <button onclick="updateChart('nasdaq', '5y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">5년</button>
+                  <button onclick="updateChart('nasdaq', '10y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">10년</button>
+                </div>
+              </div>
+              <div class="h-40 w-full">
+                <canvas id="chart-nasdaq"></canvas>
+              </div>
+            </div>
+
+            <div class="mt-5 p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <strong class="text-slate-900 font-bold">[통합 사유]</strong> 고금리 장기화 우려에 따른 기술주 차익실현 부담에도 엔비디아와 빅테크 주들의 견조한 실적 기대감이 지속되며 매물을 원활히 소화한 후 반발 매수가 지수를 견인했습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. 코스피 200 -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-5">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <span class="text-xs sm:text-sm font-bold text-slate-400 uppercase tracking-wider block">국내 대표 200 종목</span>
+                <h3 class="text-xl font-black text-slate-900">코스피 200</h3>
+              </div>
+              <span class="text-xs sm:text-sm px-3 py-1 rounded-md font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                확인 완료
+              </span>
+            </div>
+
+            <div class="flex items-baseline justify-between mt-3">
+              <div>
+                <div class="text-3xl sm:text-4xl font-black text-slate-900">1,096.25</div>
+                <span class="text-xs sm:text-sm text-slate-500 font-bold">(코스피 종합: 6,784.87)</span>
+              </div>
+              <div class="text-right">
+                <span class="text-base sm:text-lg font-extrabold text-up flex items-center justify-end gap-1">
+                  <i class="fa-solid fa-caret-up"></i> +15.27 (+1.41%)
+                </span>
+                <span class="text-xs sm:text-sm text-slate-400 block mt-0.5">전전일: 1,080.98</span>
+              </div>
+            </div>
+
+            <!-- Interactive Chart Area -->
+            <div class="mt-5 pt-4 border-t border-slate-100">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                <span class="text-xs sm:text-sm font-bold text-slate-600">기간별 추이</span>
+                <div class="flex bg-slate-100 p-1 rounded-lg text-xs font-bold overflow-x-auto custom-scrollbar" id="btn-kospi">
+                  <button onclick="updateChart('kospi', '3d')" class="px-2 py-1 rounded bg-white text-blue-600 shadow-sm whitespace-nowrap shrink-0">3일</button>
+                  <button onclick="updateChart('kospi', '5d')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">5일</button>
+                  <button onclick="updateChart('kospi', '3m')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">3개월</button>
+                  <button onclick="updateChart('kospi', '6m')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">6개월</button>
+                  <button onclick="updateChart('kospi', '1y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">1년</button>
+                  <button onclick="updateChart('kospi', '3y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">3년</button>
+                  <button onclick="updateChart('kospi', '5y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">5년</button>
+                  <button onclick="updateChart('kospi', '10y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">10년</button>
+                </div>
+              </div>
+              <div class="h-40 w-full">
+                <canvas id="chart-kospi"></canvas>
+              </div>
+            </div>
+
+            <div class="mt-5 p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <strong class="text-slate-900 font-bold">[통합 사유]</strong> 원/달러 환율 급등(1,389원선)으로 현물 코스피 시장은 외국인 순매도로 약세를 나타냈으나, 코스피200 선물 연동 파생상품에 금융투자의 기말 순매수가 유입되며 반등 마감했습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. 금 현물 -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-5">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <span class="text-xs sm:text-sm font-bold text-slate-400 uppercase tracking-wider block">원자재 / 안전자산</span>
+                <h3 class="text-xl font-black text-slate-900">금 현물 (XAU/USD)</h3>
+              </div>
+              <span class="text-xs sm:text-sm px-3 py-1 rounded-md font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                확인 완료
+              </span>
+            </div>
+
+            <div class="flex items-baseline justify-between mt-3">
+              <div class="text-3xl sm:text-4xl font-black text-amber-600">$4,607.35</div>
+              <div class="text-right">
+                <span class="text-base sm:text-lg font-extrabold text-up flex items-center justify-end gap-1">
+                  <i class="fa-solid fa-caret-up"></i> +$91.75 (+2.03%)
+                </span>
+                <span class="text-xs sm:text-sm text-slate-400 block mt-0.5">전전일: $4,515.60</span>
+              </div>
+            </div>
+
+            <!-- Interactive Chart Area -->
+            <div class="mt-5 pt-4 border-t border-slate-100">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                <span class="text-xs sm:text-sm font-bold text-slate-600">기간별 추이</span>
+                <div class="flex bg-slate-100 p-1 rounded-lg text-xs font-bold overflow-x-auto custom-scrollbar" id="btn-gold">
+                  <button onclick="updateChart('gold', '3d')" class="px-2 py-1 rounded bg-white text-amber-700 shadow-sm whitespace-nowrap shrink-0">3일</button>
+                  <button onclick="updateChart('gold', '5d')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">5일</button>
+                  <button onclick="updateChart('gold', '3m')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">3개월</button>
+                  <button onclick="updateChart('gold', '6m')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">6개월</button>
+                  <button onclick="updateChart('gold', '1y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">1년</button>
+                  <button onclick="updateChart('gold', '3y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">3년</button>
+                  <button onclick="updateChart('gold', '5y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">5년</button>
+                  <button onclick="updateChart('gold', '10y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">10년</button>
+                </div>
+              </div>
+              <div class="h-40 w-full">
+                <canvas id="chart-gold"></canvas>
+              </div>
+            </div>
+
+            <div class="mt-5 p-4 bg-amber-50/50 rounded-xl border border-amber-100">
+              <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <strong class="text-amber-900 font-bold">[통합 사유]</strong> 미 정부 부채 적자 폭증에 따른 달러 통화 신뢰 우려, 각국 중앙은행의 지속적인 금 매입, 중동/동유럽 지정학적 불안감이 결합하며 안전자산 쏠림 현상으로 최고가를 갱신했습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. 국고채 10년물 (채권 가격 지수) -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-5">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <span class="text-xs sm:text-sm font-bold text-slate-400 uppercase tracking-wider block">국내 채권 (10년 가격지수)</span>
+                <h3 class="text-xl font-black text-slate-900">국고채 10년물</h3>
+              </div>
+              <span class="text-xs sm:text-sm px-3 py-1 rounded-md font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                확인 완료
+              </span>
+            </div>
+
+            <div class="flex items-baseline justify-between mt-3">
+              <div>
+                <div class="text-3xl sm:text-4xl font-black text-slate-900">112.45</div>
+                <span class="text-xs sm:text-sm text-slate-500 font-bold">(채권수익률: 연 4.376%)</span>
+              </div>
+              <div class="text-right">
+                <span class="text-base sm:text-lg font-extrabold text-down flex items-center justify-end gap-1">
+                  <i class="fa-solid fa-caret-down"></i> -0.54 (-0.48%)
+                </span>
+                <span class="text-xs sm:text-sm text-slate-400 block mt-0.5">전전일: 112.99</span>
+              </div>
+            </div>
+
+            <!-- Interactive Chart Area -->
+            <div class="mt-5 pt-4 border-t border-slate-100">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                <span class="text-xs sm:text-sm font-bold text-slate-600">기간별 추이</span>
+                <div class="flex bg-slate-100 p-1 rounded-lg text-xs font-bold overflow-x-auto custom-scrollbar" id="btn-ktb">
+                  <button onclick="updateChart('ktb', '3d')" class="px-2 py-1 rounded bg-white text-blue-600 shadow-sm whitespace-nowrap shrink-0">3일</button>
+                  <button onclick="updateChart('ktb', '5d')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">5일</button>
+                  <button onclick="updateChart('ktb', '3m')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">3개월</button>
+                  <button onclick="updateChart('ktb', '6m')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">6개월</button>
+                  <button onclick="updateChart('ktb', '1y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">1년</button>
+                  <button onclick="updateChart('ktb', '3y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">3년</button>
+                  <button onclick="updateChart('ktb', '5y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">5년</button>
+                  <button onclick="updateChart('ktb', '10y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">10년</button>
+                </div>
+              </div>
+              <div class="h-40 w-full">
+                <canvas id="chart-ktb"></canvas>
+              </div>
+            </div>
+
+            <div class="mt-5 p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <strong class="text-slate-900 font-bold">[통합 사유]</strong> 미국 채권 가격 하락에 동조화되고, 고환율 장기화에 따른 물가/가계부채 부담 및 다음 주 한국은행 금통위의 기준금리 동결 경계감으로 채권 매수세가 위축되어 가격이 하락했습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. 미국국채 10년물 (채권 가격 지수) -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-5">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <span class="text-xs sm:text-sm font-bold text-slate-400 uppercase tracking-wider block">글로벌 채권 (10년 가격)</span>
+                <h3 class="text-xl font-black text-slate-900">미국국채 10년물</h3>
+              </div>
+              <span class="text-xs sm:text-sm px-3 py-1 rounded-md font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                확인 완료
+              </span>
+            </div>
+
+            <div class="flex items-baseline justify-between mt-3">
+              <div>
+                <div class="text-3xl sm:text-4xl font-black text-slate-900">$94.82</div>
+                <span class="text-xs sm:text-sm text-slate-500 font-bold">(채권수익률: 연 4.740%)</span>
+              </div>
+              <div class="text-right">
+                <span class="text-base sm:text-lg font-extrabold text-down flex items-center justify-end gap-1">
+                  <i class="fa-solid fa-caret-down"></i> -$0.26 (-0.27%)
+                </span>
+                <span class="text-xs sm:text-sm text-slate-400 block mt-0.5">전전일: $95.08</span>
+              </div>
+            </div>
+
+            <!-- Interactive Chart Area -->
+            <div class="mt-5 pt-4 border-t border-slate-100">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                <span class="text-xs sm:text-sm font-bold text-slate-600">기간별 추이</span>
+                <div class="flex bg-slate-100 p-1 rounded-lg text-xs font-bold overflow-x-auto custom-scrollbar" id="btn-ust">
+                  <button onclick="updateChart('ust', '3d')" class="px-2 py-1 rounded bg-white text-blue-600 shadow-sm whitespace-nowrap shrink-0">3일</button>
+                  <button onclick="updateChart('ust', '5d')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">5일</button>
+                  <button onclick="updateChart('ust', '3m')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">3개월</button>
+                  <button onclick="updateChart('ust', '6m')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">6개월</button>
+                  <button onclick="updateChart('ust', '1y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">1년</button>
+                  <button onclick="updateChart('ust', '3y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">3년</button>
+                  <button onclick="updateChart('ust', '5y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">5년</button>
+                  <button onclick="updateChart('ust', '10y')" class="px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0">10년</button>
+                </div>
+              </div>
+              <div class="h-40 w-full">
+                <canvas id="chart-ust"></canvas>
+              </div>
+            </div>
+
+            <div class="mt-5 p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                <strong class="text-slate-900 font-bold">[통합 사유]</strong> 재무부의 장기 국채 바이백 정책 발표 호재가 가격에 선반영된 후, 구조적인 미 정부 재정 적자와 신규 국채 입찰 물량 부담이 상존하면서 매도세가 확대되어 가격이 하락했습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Future Indicators & Policy Events Watchlist Section -->
+    <section class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-lg sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <i class="fa-solid fa-calendar-check text-blue-600"></i>
+          주요 모니터링 경제 지표 및 이벤트 일정 (최근 발표 & 향후 계획)
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Event Card 1 -->
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
+          <div class="flex items-center justify-between mb-2.5">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800">최근 발표</span>
+            <span class="text-xs sm:text-sm text-slate-500 font-bold">8월 14일 발표</span>
+          </div>
+          <h3 class="font-bold text-base text-slate-900 mb-1.5">미국 7월 CPI (소비자물가지수)</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-3">
+            전년 대비 +2.9% 기록 (예상치 부합). 근원 CPI +3.2%로 물가 안정세 확인 및 연준 금리 인하 기대감 조성.
+          </p>
+          <span class="text-xs sm:text-sm font-bold text-emerald-700">✓ 인플레이션 둔화 흐름 유지</span>
+        </div>
+
+        <!-- Event Card 2 -->
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
+          <div class="flex items-center justify-between mb-2.5">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800">최근 발표</span>
+            <span class="text-xs sm:text-sm text-slate-500 font-bold">8월 22일~24일</span>
+          </div>
+          <h3 class="font-bold text-base text-slate-900 mb-1.5">잭슨홀 미팅 (Jackson Hole)</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-3">
+            제롬 파월 연준 의장 연설 진행. 노동시장 냉각 및 물가 안정에 따른 "통화정책 조정 가능성" 시사.
+          </p>
+          <span class="text-xs sm:text-sm font-bold text-emerald-700">✓ 금리 인하 기조 재확인</span>
+        </div>
+
+        <!-- Event Card 3 -->
+        <div class="bg-white rounded-2xl p-5 border-2 border-blue-500 shadow-sm relative">
+          <span class="absolute -top-3 right-4 text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-600 text-white">주요 이벤트</span>
+          <div class="flex items-center justify-between mb-2.5">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-blue-100 text-blue-800">추가 발표 예정</span>
+            <span class="text-xs sm:text-sm text-slate-500 font-bold">8월 28일 예정</span>
+          </div>
+          <h3 class="font-bold text-base text-slate-900 mb-1.5">한국은행 금통위 기준금리 결정</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-3">
+            원/달러 환율 상승 부담 및 수도권 집값/가계부채 추이에 따라 현 기준금리 동결 여부 주목.
+          </p>
+          <span class="text-xs sm:text-sm font-bold text-blue-600">➔ 기준금리 동결 유력 관망</span>
+        </div>
+
+        <!-- Event Card 4 -->
+        <div class="bg-white rounded-2xl p-5 border-2 border-blue-500 shadow-sm relative">
+          <span class="absolute -top-3 right-4 text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-600 text-white">최대 분기점</span>
+          <div class="flex items-center justify-between mb-2.5">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-blue-100 text-blue-800">추가 발표 예정</span>
+            <span class="text-xs sm:text-sm text-slate-500 font-bold">9월 17~18일 예정</span>
+          </div>
+          <h3 class="font-bold text-base text-slate-900 mb-1.5">미국 FOMC 정례회의 및 금리 결정</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-3">
+            9월 금리 인하 수순 진입 여부 확정 및 점도표(Dot Plot) 공개 예정. Big Cut(50bp) 여부가 최대 관심사.
+          </p>
+          <span class="text-xs sm:text-sm font-bold text-blue-600">➔ 피벗(통화정책 전환) 결정 무대</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Additional Unverified Info Notice -->
+    <section class="bg-amber-50/60 border border-amber-200 rounded-2xl p-5 sm:p-6 text-xs sm:text-base text-amber-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="flex items-start gap-3">
+        <i class="fa-solid fa-circle-question text-amber-600 text-xl sm:text-2xl mt-0.5"></i>
+        <div>
+          <strong class="font-extrabold">[확인 필요 항목 안내]</strong> 장외 파생상품 및 기관별 국채 수급 잔고 데이터는 각 기관 공시 시차로 인해 즉각 확인이 불가하여 <span class="font-bold underline text-amber-800">확인 필요</span> 상태로 분류되었습니다.
+        </div>
+      </div>
+      <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="px-4 py-2 rounded-xl bg-white hover:bg-amber-100 text-amber-800 border border-amber-300 transition-colors whitespace-nowrap font-bold shadow-sm text-xs sm:text-sm">
+        <i class="fa-solid fa-arrow-up mr-1.5"></i> 맨 위로
+      </button>
+    </section>
+
+  </main>
+
+  <script>
+    // Expanded Datasets including 3m and 6m intervals
+    const chartDataset = {
+      sp500: {
+        color: '#dc2626',
+        bg: 'rgba(220, 38, 38, 0.08)',
+        '3d': { labels: ['8/19', '8/20', '8/21'], data: [7610.50, 7641.16, 7674.37] },
+        '5d': { labels: ['8/17', '8/18', '8/19', '8/20', '8/21'], data: [7580.20, 7595.40, 7610.50, 7641.16, 7674.37] },
+        '3m': { labels: ['6월', '6월중순', '6월말', '7월', '7월중순', '7월말', '8월'], data: [7300, 7350, 7400, 7450, 7500, 7600, 7674.37] },
+        '6m': { labels: ['2월', '3월', '4월', '5월', '6월', '7월', '8월'], data: [6900, 6820, 7100, 7250, 7400, 7550, 7674.37] },
+        '1y': { labels: ['25년8월', '9월', '10월', '11월', '12월', '26년1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월'], data: [6200, 6150, 6300, 6550, 6480, 6700, 6900, 6820, 7100, 7250, 7400, 7550, 7674.37] },
+        '3y': { labels: ['23년8월', '11월', '24년2월', '5월', '8월', '11월', '25년2월', '5월', '8월', '11월', '26년2월', '5월', '8월'], data: [4405, 4200, 4950, 5200, 5550, 5800, 6000, 6100, 6200, 6550, 6900, 7250, 7674.37] },
+        '5y': { labels: ['21년8월', '22년2월', '8월', '23년2월', '8월', '24년2월', '8월', '25년2월', '8월', '26년2월', '8월'], data: [4470, 4300, 3950, 4000, 4405, 4950, 5550, 6000, 6200, 6900, 7674.37] },
+        '10y': { labels: ['16년', '17년', '18년', '19년', '20년', '21년', '22년', '23년', '24년', '25년', '26년'], data: [2150, 2450, 2750, 2900, 3200, 4470, 3950, 4405, 5550, 6200, 7674.37] }
+      },
+      nasdaq: {
+        color: '#dc2626',
+        bg: 'rgba(220, 38, 38, 0.08)',
+        '3d': { labels: ['8/19', '8/20', '8/21'], data: [25980.10, 26067.17, 26180.45] },
+        '5d': { labels: ['8/17', '8/18', '8/19', '8/20', '8/21'], data: [25850.00, 25910.00, 25980.10, 26067.17, 26180.45] },
+        '3m': { labels: ['6월', '6월중순', '6월말', '7월', '7월중순', '7월말', '8월'], data: [24800, 25000, 25200, 25400, 25600, 25900, 26180.45] },
+        '6m': { labels: ['2월', '3월', '4월', '5월', '6월', '7월', '8월'], data: [23000, 22600, 23900, 24800, 25400, 25800, 26180.45] },
+        '1y': { labels: ['25년8월', '9월', '10월', '11월', '12월', '26년1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월'], data: [19800, 19500, 20400, 21200, 20900, 22100, 23000, 22600, 23900, 24800, 25400, 25800, 26180.45] },
+        '3y': { labels: ['23년8월', '11월', '24년2월', '5월', '8월', '11월', '25년2월', '5월', '8월', '11월', '26년2월', '5월', '8월'], data: [13600, 12800, 15800, 16800, 17800, 18500, 19000, 19200, 19800, 21200, 23000, 24800, 26180.45] },
+        '5y': { labels: ['21년8월', '22년2월', '8월', '23년2월', '8월', '24년2월', '8월', '25년2월', '8월', '26년2월', '8월'], data: [15200, 13800, 11800, 11500, 13600, 15800, 17800, 19000, 19800, 23000, 26180.45] },
+        '10y': { labels: ['16년', '17년', '18년', '19년', '20년', '21년', '22년', '23년', '24년', '25년', '26년'], data: [5000, 6200, 7400, 8100, 11000, 15200, 11800, 13600, 17800, 19800, 26180.45] }
+      },
+      kospi: {
+        color: '#dc2626',
+        bg: 'rgba(220, 38, 38, 0.08)',
+        '3d': { labels: ['8/19', '8/20', '8/21'], data: [1075.40, 1080.98, 1096.25] },
+        '5d': { labels: ['8/17', '8/18', '8/19', '8/20', '8/21'], data: [1068.0, 1070.5, 1075.4, 1080.98, 1096.25] },
+        '3m': { labels: ['6월', '6월중순', '6월말', '7월', '7월중순', '7월말', '8월'], data: [1020, 1035, 1050, 1060, 1075, 1085, 1096.25] },
+        '6m': { labels: ['2월', '3월', '4월', '5월', '6월', '7월', '8월'], data: [650, 720, 810, 920, 1330, 1060, 1096.25] },
+        '1y': { labels: ['25년8월', '9월', '10월', '11월', '12월', '26년1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월'], data: [443.09, 480.20, 520.10, 580.00, 550.30, 600.00, 650.00, 720.00, 810.00, 920.00, 1330.00, 1060.00, 1096.25] },
+        '3y': { labels: ['23년8월', '11월', '24년2월', '5월', '8월', '11월', '25년2월', '5월', '8월', '11월', '26년2월', '5월', '8월'], data: [330.00, 320.00, 350.00, 360.00, 330.00, 320.00, 340.00, 410.00, 443.09, 580.00, 650.00, 920.00, 1096.25] },
+        '5y': { labels: ['21년8월', '22년2월', '8월', '23년2월', '8월', '24년2월', '8월', '25년2월', '8월', '26년2월', '8월'], data: [420.00, 360.00, 310.00, 320.00, 330.00, 350.00, 330.00, 340.00, 443.09, 650.00, 1096.25] },
+        '10y': { labels: ['16년', '17년', '18년', '19년', '20년', '21년', '22년', '23년', '24년', '25년', '26년'], data: [250.00, 310.00, 280.00, 270.00, 380.00, 420.00, 310.00, 330.00, 360.00, 443.09, 1096.25] }
+      },
+      gold: {
+        color: '#d97706',
+        bg: 'rgba(217, 119, 6, 0.1)',
+        '3d': { labels: ['8/19', '8/20', '8/21'], data: [4450.00, 4515.60, 4607.35] },
+        '5d': { labels: ['8/17', '8/18', '8/19', '8/20', '8/21'], data: [4390.00, 4410.00, 4450.00, 4515.60, 4607.35] },
+        '3m': { labels: ['6월', '6월중순', '6월말', '7월', '7월중순', '7월말', '8월'], data: [4100, 4180, 4250, 4320, 4400, 4500, 4607.35] },
+        '6m': { labels: ['2월', '3월', '4월', '5월', '6월', '7월', '8월'], data: [3300, 3500, 3750, 3900, 4150, 4400, 4607.35] },
+        '1y': { labels: ['25년8월', '9월', '10월', '11월', '12월', '26년1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월'], data: [2500, 2600, 2720, 2800, 2950, 3100, 3300, 3500, 3750, 3900, 4150, 4400, 4607.35] },
+        '3y': { labels: ['23년8월', '11월', '24년2월', '5월', '8월', '11월', '25년2월', '5월', '8월', '11월', '26년2월', '5월', '8월'], data: [1920, 1980, 2050, 2350, 2480, 2650, 2700, 2600, 2500, 2800, 3300, 3900, 4607.35] },
+        '5y': { labels: ['21년8월', '22년2월', '8월', '23년2월', '8월', '24년2월', '8월', '25년2월', '8월', '26년2월', '8월'], data: [1780, 1850, 1720, 1820, 1920, 2050, 2480, 2700, 2500, 3300, 4607.35] },
+        '10y': { labels: ['16년', '17년', '18년', '19년', '20년', '21년', '22년', '23년', '24년', '25년', '26년'], data: [1250, 1300, 1220, 1400, 1880, 1780, 1720, 1920, 2480, 2500, 4607.35] }
+      },
+      ktb: {
+        color: '#2563eb',
+        bg: 'rgba(37, 99, 235, 0.08)',
+        '3d': { labels: ['8/19', '8/20', '8/21'], data: [113.80, 112.99, 112.45] },
+        '5d': { labels: ['8/17', '8/18', '8/19', '8/20', '8/21'], data: [114.20, 114.00, 113.80, 112.99, 112.45] },
+        '3m': { labels: ['6월', '6월중순', '6월말', '7월', '7월중순', '7월말', '8월'], data: [113.5, 113.3, 113.1, 113.0, 112.8, 112.6, 112.45] },
+        '6m': { labels: ['2월', '3월', '4월', '5월', '6월', '7월', '8월'], data: [115.2, 114.8, 114.0, 113.5, 113.0, 112.8, 112.45] },
+        '1y': { labels: ['25년8월', '9월', '10월', '11월', '12월', '26년1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월'], data: [118.5, 118.1, 117.5, 116.8, 117.2, 116.0, 115.2, 114.8, 114.0, 113.5, 113.0, 112.8, 112.45] },
+        '3y': { labels: ['23년8월', '11월', '24년2월', '5월', '8월', '11월', '25년2월', '5월', '8월', '11월', '26년2월', '5월', '8월'], data: [108.0, 106.5, 110.2, 112.0, 114.0, 116.0, 117.0, 118.0, 118.5, 116.8, 115.2, 113.5, 112.45] },
+        '5y': { labels: ['21년8월', '22년2월', '8월', '23년2월', '8월', '24년2월', '8월', '25년2월', '8월', '26년2월', '8월'], data: [126.0, 118.0, 105.0, 106.0, 108.0, 110.2, 114.0, 117.0, 118.5, 115.2, 112.45] },
+        '10y': { labels: ['16년', '17년', '18년', '19년', '20년', '21년', '22년', '23년', '24년', '25년', '26년'], data: [128.0, 125.0, 123.0, 132.0, 135.0, 126.0, 105.0, 108.0, 114.0, 118.5, 112.45] }
+      },
+      ust: {
+        color: '#2563eb',
+        bg: 'rgba(37, 99, 235, 0.08)',
+        '3d': { labels: ['8/19', '8/20', '8/21'], data: [95.80, 95.08, 94.82] },
+        '5d': { labels: ['8/17', '8/18', '8/19', '8/20', '8/21'], data: [96.30, 96.00, 95.80, 95.08, 94.82] },
+        '3m': { labels: ['6월', '6월중순', '6월말', '7월', '7월중순', '7월말', '8월'], data: [96.2, 96.0, 95.7, 95.5, 95.2, 95.0, 94.82] },
+        '6m': { labels: ['2월', '3월', '4월', '5월', '6월', '7월', '8월'], data: [98.5, 97.8, 97.0, 96.1, 95.5, 95.1, 94.82] },
+        '1y': { labels: ['25년8월', '9월', '10월', '11월', '12월', '26년1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월'], data: [102.0, 101.5, 100.8, 100.2, 99.8, 99.0, 98.5, 97.8, 97.0, 96.1, 95.5, 95.1, 94.82] },
+        '3y': { labels: ['23년8월', '11월', '24년2월', '5월', '8월', '11월', '25년2월', '5월', '8월', '11월', '26년2월', '5월', '8월'], data: [96.0, 92.5, 97.0, 98.2, 99.5, 101.0, 101.8, 102.5, 102.0, 100.2, 98.5, 96.1, 94.82] },
+        '5y': { labels: ['21년8월', '22년2월', '8월', '23년2월', '8월', '24년2월', '8월', '25년2월', '8월', '26년2월', '8월'], data: [130.0, 115.0, 94.0, 93.5, 96.0, 97.0, 99.5, 101.8, 102.0, 98.5, 94.82] },
+        '10y': { labels: ['16년', '17년', '18년', '19년', '20년', '21년', '22년', '23년', '24년', '25년', '26년'], data: [132.0, 128.0, 120.0, 135.0, 138.0, 130.0, 94.0, 96.0, 99.5, 102.0, 94.82] }
+      }
+    };
+
+    const chartInstances = {};
+
+    // Function to initialize all charts
+    function initCharts() {
+      Object.keys(chartDataset).forEach(assetKey => {
+        const ctx = document.getElementById(`chart-${assetKey}`).getContext('2d');
+        const assetInfo = chartDataset[assetKey];
+        const defaultData = assetInfo['3d'];
+
+        chartInstances[assetKey] = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: defaultData.labels,
+            datasets: [{
+              data: defaultData.data,
+              borderColor: assetInfo.color,
+              borderWidth: 2.5,
+              backgroundColor: assetInfo.bg,
+              fill: true,
+              tension: 0.25,
+              pointRadius: 3.5,
+              pointHoverRadius: 6,
+              pointBackgroundColor: assetInfo.color
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                enabled: true,
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                  label: function(context) {
+                    return ` 종가/지수: ${context.parsed.y}`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: { color: '#64748b', font: { size: 10, weight: 'bold' } }
+              },
+              y: {
+                grid: { color: 'rgba(0,0,0,0.04)' },
+                ticks: { color: '#64748b', font: { size: 10 } }
+              }
+            }
+          }
+        });
+      });
+    }
+
+    // Function to dynamically update chart based on selected period
+    function updateChart(assetKey, periodKey) {
+      const chart = chartInstances[assetKey];
+      const newDataset = chartDataset[assetKey][periodKey];
+
+      if (chart && newDataset) {
+        chart.data.labels = newDataset.labels;
+        chart.data.datasets[0].data = newDataset.data;
+        chart.update();
+
+        // Update button active state styling preserving whitespace-nowrap and shrink-0
+        const btnGroup = document.getElementById(`btn-${assetKey}`);
+        if (btnGroup) {
+          const buttons = btnGroup.querySelectorAll('button');
+          buttons.forEach(btn => {
+            btn.className = 'px-2 py-1 rounded text-slate-600 hover:text-slate-900 whitespace-nowrap shrink-0';
+            if (btn.textContent.trim() === getPeriodLabel(periodKey)) {
+              const activeColorClass = assetKey === 'gold' ? 'text-amber-700' : 'text-blue-600';
+              btn.className = `px-2 py-1 rounded bg-white ${activeColorClass} shadow-sm whitespace-nowrap shrink-0`;
+            }
+          });
+        }
+      }
+    }
+
+    function getPeriodLabel(key) {
+      switch(key) {
+        case '3d': return '3일';
+        case '5d': return '5일';
+        case '3m': return '3개월';
+        case '6m': return '6개월';
+        case '1y': return '1년';
+        case '3y': return '3년';
+        case '5y': return '5년';
+        case '10y': return '10년';
+        default: return '';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initCharts();
+    });
+  </script>
+</body>
+</html>
